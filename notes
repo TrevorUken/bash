@@ -1,0 +1,79 @@
+linux commands and switches
+  - cat
+  - ctrl +p
+    -(up arrow)
+  - ctrl +n
+    -(down arrow)
+  - alt +f
+  - alt +b 
+  - history
+    -your commands 
+  - ctrl +r 
+  - man
+    (/keyword)
+  - pwd
+ - touch
+  -(creates a file)
+  -t (time)
+ - mkdir 
+  -(directorys)
+ - rmdir -p 
+ - ln -s (symbolic link) 
+ - ln <filename> <secondfile> (hard link) like cp 
+ -find . -name 
+ - find -iname (makes it case insensitive) 
+ - find  -inum (inode) 
+ - 2> /dev/null (the void) 
+ find -size 0 or -empty 
+ - find / -user studemt
+ - find / -maxdepth 2
+find .-(A|C|Mtime)
+find / -executable ! -type d 
+find /var/log -type -d -iname *.log -exec ls -la {} \; 2> /dev/null
+find /var/log -iname *.log -exec ls -la {} 2> /dev/null \;
+find /var/log -iname *.log 2> /dev/null -printf "%i %f\n" (%i = inodes and %f = filename) 
+find / -inum 999 
+touch /tmp/find {1..10}  (creates 10 files) 
+touch file{1..10}.txt
+egrep [regex] 
+egrep -o /home.*/
+cat /etc/passwd | grep -n home 
+grep -v /bin/bash (everything that doesnt unclude that) 
+grep -C3 'sys' /etc/passwd -C(context) -A (after) -B (before)
+ps -u student -u(user) --forest(parent child format)
+kill -9 <pid> -9(forcfully) -HUP(kill and restart)
+cut -d: (diliminator) -f1 (-f is index position) (default is the tab key) -c (shows characters)
+cut -d- -f1- -s (-s only the stuff that contain the delimenter) --complement (everything before the delemeter)
+|(takeing out putand putting it in another commmand) !(Not) &(background) ; (multi commands on the same line) && (and) ||(or) (chainging operators)
+> (create) >> (append) 2> (standard error)
+
+
+
+
+EXAMPLES: 
+
+
+Copy all files in the $HOME/1123 directory, that end in ".txt", and omit files containing a tilde "~" character, to directory $HOME/CUT.
+
+Use only the find and cp commands. You will need to utilize the -exec option on find to accomplish this activity.
+
+The find command uses BOOLEAN "!" to designate that it does not want to find any files or directories that follows.
+
+ANSWER: 
+      find $HOME/1123/ -type f -name '*.txt' ! -name '*~.txt' -exec cp {} $HOME/1123 $HOME/CUT \;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
