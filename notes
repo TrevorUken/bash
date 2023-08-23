@@ -16,10 +16,13 @@ linux commands and switches
   -(creates a file)
   -t (time)
  - mkdir 
-  -(directorys)
+  -p(directorys)
+
  - rmdir -p 
+
  - ln -s (symbolic link) 
  - ln <filename> <secondfile> (hard link) like cp 
+
  -find . -name 
  - find -iname (makes it case insensitive) 
  - find  -inum (inode) 
@@ -33,21 +36,45 @@ find /var/log -type -d -iname *.log -exec ls -la {} \; 2> /dev/null
 find /var/log -iname *.log -exec ls -la {} 2> /dev/null \;
 find /var/log -iname *.log 2> /dev/null -printf "%i %f\n" (%i = inodes and %f = filename) 
 find / -inum 999 
+
 touch /tmp/find {1..10}  (creates 10 files) 
 touch file{1..10}.txt
+
 egrep [regex] 
 egrep -o /home.*/
 cat /etc/passwd | grep -n home 
+
 grep -v /bin/bash (everything that doesnt unclude that) 
 grep -C3 'sys' /etc/passwd -C(context) -A (after) -B (before)
+
 ps -u student -u(user) --forest(parent child format)
+
 kill -9 <pid> -9(forcfully) -HUP(kill and restart)
+
 cut -d: (diliminator) -f1 (-f is index position) (default is the tab key) -c (shows characters)
 cut -d- -f1- -s (-s only the stuff that contain the delimenter) --complement (everything before the delemeter)
-|(takeing out putand putting it in another commmand) !(Not) &(background) ; (multi commands on the same line) && (and) ||(or) (chainging operators)
+
+|(takeing out putand putting it in another commmand) !(Not) &(background) ; (multi commands on the same line) && (and) ||(or) (chainging operators) \(splits multiple commands on multi lines) {} (brace expantion)
 > (create) >> (append) 2> (standard error)
 
+awk -Fn
+( -F delemeter) '{print $NF}' ($NF last field no matter what) ('BEGIN{OSF='#'} CHANGES THE DELIMITER)
+awk -v myvar=$(sed 's/root/grootg' $HOME/passwd -f:'{OFS=":"}{$1=myvar;print}'}
 
+command substisitution:
+Example: A=$(cat/etc/passwd) Executed when echoed(echo $A)
+         B='cat /ect/passwd' (execute when typed ($B))
+
+sed 's/home/nobodyhome/g' passwd (g = global, s = substitute)
+sed 's/\/bin\/bash/\/been\/better/g' sed passwd
+sed '/home/d' passwd
+sed -e'/xrdp/d' -e '/telnetd/d' passwd
+
+cat sort.txt | awk -F: '{print $1}' | sort -u (-n sorting baised on numbers) (-u sorting a file with only one instance if therer is more than one) 
+cat sort.txt | awk -F: '{print $1}' | sort | uniq -c 
+
+alias <nam>='command'
+alias -p (all aliases)
 
 
 EXAMPLES: 
@@ -112,6 +139,50 @@ find /var -empty -printf "%i %f\n"
 
 
 answer:
-ls -p $HOME/CUT | grep -v "/$"| grep -v "names" > $HOME/CUT/names
+ls -l $HOME/CUT | cut -d. -f1- -s| cut -d: -f 2 | cut -d' ' -f2  > $HOME/CUT/names
 
+
+Day 2 
+_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+
+
+1) Write a basic bash script that greps ONLY the IP addresses in the text file provided (named StoryHiddenIPs in the current directory); sort them uniquely by number of times they appear.
+
+answer: 
+grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' StoryHiddenIPs |sort -n | uniq -c | sort -r
+
+
+2) 
+    Using ONLY the awk command, write a BASH one-liner script that extracts ONLY the names of all the system and user accounts that are not UIDs 0-3.
+    Only display those that use /bin/bash as their default shell.
+    The input file is named $HOME/passwd and is located in the current directory.
+    Output the results to a file called $HOME/SED/names.txt
+
+answer: 
+cat $HOME/passwd | awk -F: '{if($3 > 3 && $7 == "/bin/bash") print $1}' > $HOME/SED/names.txt
+
+
+3) Using ONLY sed, write all lines from $HOME/passwd into $HOME/PASS/passwd.txt that do not end with either /bin/sh or /bin/false.
+
+answer: 
+cat $HOME/passwd | sed -e '/\/bin\/sh/d' -e '/\/bin\/false/d' > $HOME/PASS/passwd.txt
+
+4) 
+    Find all dmesg kernel messages that contain CPU or BIOS (uppercase) in the string, but not usable or reserved (case-insensitive)
+    Print only the msg itself, omitting the bracketed numerical expressions ie: [1.132775]
+
+Answer: 
+dmesg | grep 'CPU\|BIOS' | cut -d] -f2- | grep -v 'usable\|reserved'
+
+5) 
+
+    Write a Bash script using "Command Substitution" to replace all passwords, using openssl, from the file $HOME/PASS/shadow.txt with the MD5 encrypted password: Password1234, with salt: bad4u
+    Output of this command should go to the screen/standard output.
+    You are not limited to a particular command, however you must use openssl. Type man openssl passwd for more information.
+
+answer:
+
+a=$(openssl passwd -1 -salt bad4u Password1234)
+awk -F: -v "awk_var=$a" 'BEGIN {OFS=":"} {$2=awk_var} {print $0}' $HOME/PASS/shadow.txt
 
