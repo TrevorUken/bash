@@ -53,7 +53,7 @@ cut -d- -f1- -s (-s only the stuff that contain the delimenter) --complement (ev
 EXAMPLES: 
 
 
-Copy all files in the $HOME/1123 directory, that end in ".txt", and omit files containing a tilde "~" character, to directory $HOME/CUT.
+1) Copy all files in the $HOME/1123 directory, that end in ".txt", and omit files containing a tilde "~" character, to directory $HOME/CUT.
 
 Use only the find and cp commands. You will need to utilize the -exec option on find to accomplish this activity.
 
@@ -66,7 +66,7 @@ ANSWER:
 
 
 
- Using only the ls -l and cut Commands, write a BASH script that shows all filenames with extensions ie: 1.txt, etc., but no directories, in $HOME/CUT.
+2) Using only the ls -l and cut Commands, write a BASH script that shows all filenames with extensions ie: 1.txt, etc., but no directories, in $HOME/CUT.
  
 Write those to a text file called names in $HOME/CUT directory.
 
@@ -78,9 +78,40 @@ ANSWER:
 ls -p $HOME/CUT | grep -v "/$"| grep -v "names" > $HOME/CUT/names
 
 
+3)Brace expansion is a mechanism by which arbitrary strings may be generated, for commands that will take multiple arguements.
+
+answer:
+mkdir $home {1123,1134,1145,1156}
 
 
+4) As we learned, the following example would create five files with one command.
+
+answer:
+touch $HOME/1123/{1..5}.txt; touch $HOME/1123/{6..9}~.txt
+
+5)Using the find command, list all files in $HOME/1123 that end in .txt.
+
+answer:
+find $HOME/1123 -type f -name '*.txt'
+
+6) list all files in $HOME/1123 that end in .txt. Omit the files containing a tilde (~) character.
+
+answer: 
+find $HOME/1123/ -type f -name '*.txt' ! -name '*~.txt'
 
 
+7)Using ONLY the find command, find all empty files/directories in directory /var and print out ONLY the filename (not absolute path), and the inode number, separated by newlines
+
+
+answer:
+find /var -empty -printf "%i %f\n"
+
+8)  Using only the ls -l and cut Commands, write a BASH script that shows all filenames with extensions ie: 1.txt, etc., but no directories, in $HOME/CUT.
+    Write those to a text file called names in $HOME/CUT directory.
+    Omit the names filename from your output.
+
+
+answer:
+ls -p $HOME/CUT | grep -v "/$"| grep -v "names" > $HOME/CUT/names
 
 
