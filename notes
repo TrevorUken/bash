@@ -58,7 +58,7 @@ cut -d- -f1- -s (-s only the stuff that contain the delimenter) --complement (ev
 > (create) >> (append) 2> (standard error)
 
 awk -Fn
-( -F delemeter) '{print $NF}' ($NF last field no matter what) ('BEGIN{OSF='#'} CHANGES THE DELIMITER)
+( -F delemeter) '{print $NF}' ($NF last field no matter what) ('BEGIN{OFS='#'} CHANGES THE DELIMITER)
 awk -v myvar=$(sed 's/root/grootg' $HOME/passwd -f:'{OFS=":"}{$1=myvar;print}'}
 
 command substisitution:
@@ -75,6 +75,26 @@ cat sort.txt | awk -F: '{print $1}' | sort | uniq -c
 
 alias <nam>='command'
 alias -p (all aliases)
+
+md5dsum
+
+
+paramiter                                                            functions
+____________________________________________________________________________________________________________________________________________________________________________________________________
+var=123                                                              hello_wordld(){
+                                                                       <code block>
+                                                                      }
+be==234
+$ =a+b
+$#number id ares added
+$0 = script namee
+$* = arguments passed 
+$? = see if the last command ran
+$_ = prints the previous == line 
+$$ = pid 
+$- = flags 
+$! = backround job 
+
 
 
 EXAMPLES: 
@@ -185,4 +205,50 @@ answer:
 
 a=$(openssl passwd -1 -salt bad4u Password1234)
 awk -F: -v "awk_var=$a" 'BEGIN {OFS=":"} {$2=awk_var} {print $0}' $HOME/PASS/shadow.txt
+_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Day 3 
+1) 
+    Using find, find all files under the $HOME directory with a .bin extension ONLY.
+    Once the file(s) and their path(s) have been found, remove the file name from the absolute path output.
+    Ensure there is no trailing / at the end of the directory path when outputting to standard output.
+    You may need to sort the output depending on the command(s) you use. Have each path displayed only once.
+
+
+Answer: 
+find $HOME -type f -name "*.bin" -exec dirname {} \; | sort -u 
+
+2) 
+
+    Find all executable files under the following four directories:
+        /bin
+        /sbin
+        /usr/bin
+        /usr/sbin
+    Sort the filenames with absolute path, and get the md5sum of the 10th file from the top of the list.
+
+answer: 
+a=$(find /bin /sbin /usr/bin /usr/sbin -type f -executable | sort | head -10 | tail -1)
+md5sum $a | cut -d' ' -f1
+
+
+3) 
+    Write a script which will copy the last entry/line in the passwd-like file specified by the $1 positional parameter
+    Modify the copied line to change:
+        User name to the value specified by $2 positional parameter
+        Used id and group id to the value specified by $3 positional parameter
+        Home directory to a directory matching the user name specified by $2 positional parameter under the /home directory (i.e. if the $2 was 'Chris', the new line would have /home/Chris as its home directory)
+        The default shell to `/bin/bash'
+    Append the modified line to the end of the file
+
+answer:
+tail -1 $1 | awk -F: -v "name=$2" -v "id=$3" 'BEGIN {OFS=":"} {$1=name} {$3=id} {$4=id} {$6="/home/"name} {$7="/bin/bash"}{print $0}' >> $1
+
+4) 
+    Sort the /etc/passwd file numerically by the GID field.
+    For the 10th entry in the sorted passwd file, get an md5 hash of that entry’s home directory.
+    Output ONLY the MD5 hash of the directory's name to standard output.
+
+Answer:
+cat /etc/passwd | sort -n -t':' -k4 | head -10 | tail -1 | awk -F: '{print $6}' | md5sum | rev | cut -c4- | rev
 
