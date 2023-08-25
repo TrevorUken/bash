@@ -97,6 +97,61 @@ $! = backround job
 
 
 
+<function>()
+{
+<code body>
+}
+call upon the function
+
+Loops
+_____________________________________________________________________________________________________________________________________________________________________________________________________
+for x in {1..10}; do         for x in $(cat <filename>);do 
+<code Block>                 <code block> 
+done                         done
+
+for x in $(cat /etc/passwd | awk -F: '{print $1}')
+    do echo $x 
+    done 
+
+
+x=0
+while[[ $x -le 10 ]]    (break is in the while statements) 
+do echo $x
+   x=$(($x+1))
+done 
+
+if [[ <condition> ]]
+then 
+  <code block> 
+fi 
+
+ip route 
+which 
+tar
+zip 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 EXAMPLES: 
 
 
@@ -242,7 +297,7 @@ md5sum $a | cut -d' ' -f1
     Append the modified line to the end of the file
 
 answer:
-tail -1 $1 | awk -F: -v "name=$2" -v "id=$3" 'BEGIN {OFS=":"} {$1=name} {$3=id} {$4=id} {$6="/home/"name} {$7="/bin/bash"}{print $0}' >> $1
+tail -1 $1 | awk -F: -v "name=$2" -v "id=$3" 'BEGIN {OFS=":"} {$1=name} {$3=id} {$4=id} {$6="/home/"name} {$NF="/bin/bash"}{print $0}' >> $1
 
 4) 
     Sort the /etc/passwd file numerically by the GID field.
@@ -270,3 +325,25 @@ b=$(cat goodhash | wc -l)
 c=$(cat $HOME/badhash | grep -v "Permission denied" | wc -l)
 echo "Successfully Hashed Files: "$b
 echo "Unsuccessfully Hashed Directories: "$c
+
+
+Day 4 
+_____________________________________________________________________________________________________________________________________________________________________
+
+
+1) 
+Design a script that detects the existence of directory: $HOME/.ssh
+
+    Upon successful detection, copies any and all files from within the directory $HOME/.ssh to directory $HOME/SSH and produce no output. You will need to create $HOME/SSH.
+    Upon un-successful detection, displays the error message "Run ssh-keygen" to the user.
+
+answer: 
+#!/bin/bash 
+mkdir $HOME/SSH
+cd $HOME/.ssh
+if [[ -d $HOME/.ssh ]] 
+then 
+   cp -r $HOME/.ssh/* $HOME/SSH
+else
+    echo "Run ssh-keygen"
+fi
