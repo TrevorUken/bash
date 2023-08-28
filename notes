@@ -45,7 +45,7 @@ egrep -o /home.*/
 cat /etc/passwd | grep -n home 
 
 grep -v /bin/bash (everything that doesnt unclude that) 
-grep -C3 'sys' /etc/passwd -C(context) -A (after) -B (before)
+grep -C3 'sys' /etc/passwd -C(context) -A (after) -B (before) -i (Cases insysnsitive ) -E -r -a
 
 ps -u student -u(user) --forest(parent child format)
 
@@ -57,7 +57,7 @@ cut -d- -f1- -s (-s only the stuff that contain the delimenter) --complement (ev
 |(takeing out putand putting it in another commmand) !(Not) &(background) ; (multi commands on the same line) && (and) ||(or) (chainging operators) \(splits multiple commands on multi lines) {} (brace expantion)
 > (create) >> (append) 2> (standard error)
 
-awk -Fn
+awk -F: '{print $x}'
 ( -F delemeter) '{print $NF}' ($NF last field no matter what) ('BEGIN{OFS='#'} CHANGES THE DELIMITER)
 awk -v myvar=$(sed 's/root/grootg' $HOME/passwd -f:'{OFS=":"}{$1=myvar;print}'}
 
@@ -76,6 +76,12 @@ cat sort.txt | awk -F: '{print $1}' | sort | uniq -c
 alias <nam>='command'
 alias -p (all aliases)
 
+wc -l 
+
+
+touch -t -r -d 
+
+tar -czf (tar ball) 
 md5dsum
 
 
@@ -130,7 +136,7 @@ which
 tar
 zip 
 
-
+_____________________________________________________________________________________________________________________________________________________________________________________________________
 
 
 
@@ -449,4 +455,46 @@ echo cat $HOME/less | sort | uniq -c | sort -nr
 
 
 
+Prack test
+___________________________________________________________________________________________________________________________________________________________________________________________
+
+
+1) Create a script that will print to standard output all user names from the /etc/passwd file.
+
+answers: 
+cat /etc/passwd | awk -F: '{print $1}'  
+
+
+2) 
+    Print to standard output all usernames from the file path specified by the parameter filename sorted ascending numerically by user id.
+    The file will be in the format of /etc/passwd
+
+answer: 
+cat $1 | sort -n -t':' -k3 | awk -F: '{print $1}'
+
+
+3)  
+    Create a file specified by the name newfile.
+    Set the file modified date to the value specified in filedate and time to '1730'. NOTE: filedate contains only a valid date in YYYYMMDD format, not a time.
+
+
+answer: touch  -t $21730.00 $1
+
+4) Terminate the process that has the randomly assigned name specified by procname variable. procname does not contain path information.
+
+answer: 
+pkill -9 $1
+
+
+5) 
+
+
+    Replace every instance of 'cat' in "infile" with 'dog'.
+    Replace every instance of 'Navy' in "infile" with 'Army'.
+    Replacements are case-sensitive.
+    Write the output to the file specifed by the variable 'outfile'.
+answer 
+sed -e 's/cat/dog/g' -e 's/Navy/Army/d' $infile > $outfile
+
+6 ) ls $dirname | wc -l 
 
